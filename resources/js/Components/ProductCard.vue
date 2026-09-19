@@ -1,0 +1,7 @@
+<script setup>
+import { Link } from '@inertiajs/vue3';
+import { MapPin, Heart, Star, PackageCheck, ArrowUpRight } from 'lucide-vue-next';
+defineProps({ product:Object, saved:Boolean });
+const emit=defineEmits(['toggle-save']);
+</script>
+<template><article class="product-card"><div class="product-image-wrap"><img :src="product.image" :alt="product.name" class="product-image" loading="lazy"><button class="save-btn" :class="{saved}" @click="emit('toggle-save',product.id)" :aria-label="saved?'Unsave product':'Save product'"><Heart :size="18" :fill="saved?'currentColor':'none'"/></button><span v-if="product.is_featured" class="featured-badge">Featured</span></div><div class="product-body"><div class="eyebrow"><span>{{product.category}}</span><span>•</span><span>{{product.type}}</span></div><Link :href="`/products/${product.slug}`" class="product-title">{{product.name}}</Link><p class="product-location"><MapPin :size="14"/> {{product.location}}</p><div class="product-meta"><div><strong>{{product.formatted_price}}</strong><small>/ {{product.unit}}</small></div><span class="rating"><Star :size="14" fill="currentColor"/> {{product.rating}} <em>({{product.review_count}})</em></span></div><div class="availability" :class="product.is_available?'available':'unavailable'"><PackageCheck :size="15"/> {{product.is_available?`${product.stock} units available`:'Currently unavailable'}}</div><Link :href="`/products/${product.slug}`" class="view-link">View details <ArrowUpRight :size="15"/></Link></div></article></template>
