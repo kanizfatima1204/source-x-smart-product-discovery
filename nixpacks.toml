@@ -1,0 +1,23 @@
+[variables]
+COMPOSER_ALLOW_SUPERUSER = "1"
+
+[phases.setup]
+nixPkgs = [
+    "php82",
+    "php82Packages.composer",
+    "php82Extensions.pdo_sqlite",
+    "php82Extensions.sqlite3",
+    "php82Extensions.pdo_mysql",
+    "nodejs_20"
+]
+
+[phases.install]
+cmds = [
+    "composer install --no-dev --optimize-autoloader --no-interaction",
+    "npm ci --include=dev"
+]
+
+[phases.build]
+cmds = [
+    "npm run build"
+]

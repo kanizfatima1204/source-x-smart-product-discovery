@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', (env('MYSQLHOST') || env('MYSQL_URL') || env('DATABASE_URL')) ? 'mysql' : 'sqlite'),
+
     'connections' => [
         'sqlite' => [
             'driver' => 'sqlite',
@@ -14,7 +15,28 @@ return [
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
+
+        'mysql' => [
+            'driver' => 'mysql',
+            'url' => env('DB_URL', env('DATABASE_URL', env('MYSQL_URL'))),
+            'host' => env('DB_HOST', env('MYSQLHOST', '127.0.0.1')),
+            'port' => env('DB_PORT', env('MYSQLPORT', '3306')),
+            'database' => env('DB_DATABASE', env('MYSQLDATABASE', 'forge')),
+            'username' => env('DB_USERNAME', env('MYSQLUSER', 'forge')),
+            'password' => env('DB_PASSWORD', env('MYSQLPASSWORD', '')),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
     ],
+
     'migrations' => [
         'table' => 'migrations',
         'update_date_on_publish' => true,

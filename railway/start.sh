@@ -24,11 +24,20 @@ if [ ! -f .env ]; then
   fi
 fi
 
-# 4. Database configuration (absolute path for SQLite)
-export DB_CONNECTION=sqlite
-export DB_DATABASE="${ROOT_DIR}/database/database.sqlite"
-touch "${DB_DATABASE}"
-chmod 666 "${DB_DATABASE}" 2>/dev/null || true
+# 4. Detect Database Connection (MySQL vs SQLite)
+if [ -z "${DB_CONNECTION:-}" ]; then
+  if [ -n "${MYSQLHOST:-}" ] || [ -n "${MYSQL_URL:-}" ] || [ -n "${DATABASE_URL:-}" ]; then
+    export DB_CONNECTION=mysql
+  else
+    export DB_CONNECTION=sqlite
+  fi
+fi
+
+if [[ "${DB_CONNECTION}" == "sqlite" ]]; then
+  export DB_DATABASE="${ROOT_DIR}/database/database.sqlite"
+  touch "${DB_DATABASE}"
+  chmod 666 "${DB_DATABASE}" 2>/dev/null || true
+fi
 
 # 5. Set APP_URL if running on Railway domain
 if [ -n "${RAILWAY_PUBLIC_DOMAIN:-}" ]; then
