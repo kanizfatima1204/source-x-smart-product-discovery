@@ -8,9 +8,16 @@ mkdir -p \
   storage/logs \
   bootstrap/cache
 
-touch database/database.sqlite
+if [ -z "${DB_DATABASE:-}" ]; then
+  export DB_DATABASE=database/database.sqlite
+fi
 
-if [ -z "${APP_KEY:-}" ]; then
+if [[ "${DB_CONNECTION:-sqlite}" == "sqlite" && "${DB_DATABASE}" != ":memory:" ]]; then
+  mkdir -p "$(dirname "${DB_DATABASE}")"
+  touch "${DB_DATABASE}"
+fi
+
+if [ -z "${APP_KEY:-}" ] || [[ "${APP_KEY}" != base64:* ]]; then
   php artisan key:generate --force --no-interaction
 fi
 
