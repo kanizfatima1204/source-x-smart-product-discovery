@@ -1,6 +1,10 @@
 /vendor
 /node_modules
 /public/build
+!/public/build/
+!/public/build/manifest.json
+!/public/build/assets/
+!/public/build/assets/*
 .env
 .phpunit.result.cache
 Homestead.json
