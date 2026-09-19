@@ -18,7 +18,7 @@ if [[ "${DB_CONNECTION:-sqlite}" == "sqlite" && "${DB_DATABASE}" != ":memory:" ]
 fi
 
 if [ -z "${APP_KEY:-}" ] || [[ "${APP_KEY}" != base64:* ]]; then
-  php artisan key:generate --force --no-interaction
+  export APP_KEY="$(php artisan key:generate --show --no-interaction)"
 fi
 
 php artisan migrate --force --no-interaction
